@@ -1,3 +1,4 @@
+const BASE_URL = "https://easysnippet.onrender.com";
 document.addEventListener('DOMContentLoaded', () => {
 
     // ==========================================
@@ -52,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const password = document.getElementById('signup-password').value;
 
             try {
-                const response = await fetch('/signup', {
+                const response = await fetch('${BASE_URL}/signup', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ name, email, password })
@@ -73,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const password = document.getElementById('login-password').value;
 
             try {
-                const response = await fetch('/login-user', {
+                const response = await fetch('${BASE_URL}/login-user', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email, password })
@@ -126,7 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!snippetsGrid) return; 
 
         try {
-            const response = await fetch(`/get-snippets/${user.id}`);
+            const response = await fetch(`${BASE_URL}/get-snippets/${user.id}`);
             const data = await response.json();
 
             if (data.success) {
@@ -375,7 +376,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Delete (Soft)
     window.deleteSnippet = async (id) => {
         if (confirm("Move to Trash?")) {
-            await fetch('/delete-snippet', {
+            await fetch('${BASE_URL}/delete-snippet', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ id })
@@ -387,14 +388,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // Delete (Hard)
     window.deletePermanently = async (id) => {
         if (confirm("⚠️ Delete FOREVER?")) {
-            await fetch(`/permanent-delete/${id}`, { method: 'DELETE' });
+            await fetch(`${BASE_URL}/permanent-delete/${id}`, { method: 'DELETE' });
             loadSnippets(); 
         }
     };
 
     // Favorite
     window.toggleFavorite = async (id) => {
-        await fetch('/toggle-favorite', {
+        await fetch('${BASE_URL}/toggle-favorite', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ id })
