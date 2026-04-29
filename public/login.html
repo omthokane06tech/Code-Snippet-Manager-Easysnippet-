@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - EasySnippet</title>
+
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<nav class="navbar auth-nav">
+    <div class="container nav-container">
+        <a href="index.html" class="logo">
+            <span class="logo-icon">&lt;/&gt;</span> EASYSNIPPET
+        </a>
+    </div>
+</nav>
+
+<div class="auth-wrapper">
+    <div class="auth-container">
+        
+        <div class="auth-visual">
+            <div class="visual-content">
+                <h2 id="visual-title">Welcome back!</h2>
+                <p id="visual-desc">Access your personal code vault and start faster.</p>
+            </div>
+        </div>
+
+        <div class="auth-form-box">
+            
+            <!-- LOGIN -->
+            <form id="loginForm" class="auth-form active">
+                <div class="form-header">
+                    <h2>Log In</h2>
+                </div>
+
+                <div class="input-group">
+                    <label>Email</label>
+                    <input type="email" id="login-email" required>
+                </div>
+
+                <div class="input-group">
+                    <label>Password</label>
+                    <input type="password" id="login-password" required>
+                </div>
+
+                <button type="submit" class="btn-large btn-full">Sign In</button>
+
+                <div class="form-footer">
+                    Don't have an account? <a href="#" id="showSignup">Sign up</a>
+                </div>
+            </form>
+
+            <!-- SIGNUP -->
+            <form id="signupForm" class="auth-form">
+                <div class="form-header">
+                    <h2>Create Account</h2>
+                </div>
+
+                <div class="input-group">
+                    <label>Name</label>
+                    <input type="text" id="signup-name" required>
+                </div>
+
+                <div class="input-group">
+                    <label>Email</label>
+                    <input type="email" id="signup-email" required>
+                </div>
+
+                <div class="input-group">
+                    <label>Password</label>
+                    <input type="password" id="signup-password" required>
+                </div>
+
+                <button type="submit" class="btn-large btn-full">Create Account</button>
+
+                <div class="form-footer">
+                    Already have an account? <a href="#" id="showLogin">Log in</a>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<script>
+/* =========================
+   🔥 CONFIG
+========================= */
+const BASE_URL = "https://your-backend.onrender.com"; // 🔁 CHANGE THIS
+
+/* =========================
+   🔄 SWITCH FORMS
+========================= */
+const loginForm = document.getElementById("loginForm");
+const signupForm = document.getElementById("signupForm");
+
+document.getElementById("showSignup").onclick = () => {
+    loginForm.classList.remove("active");
+    signupForm.classList.add("active");
+};
+
+document.getElementById("showLogin").onclick = () => {
+    signupForm.classList.remove("active");
+    loginForm.classList.add("active");
+};
+
+/* =========================
+   🔐 LOGIN
+========================= */
+loginForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const email = document.getElementById("login-email").value;
+    const password = document.getElementById("login-password").value;
+
+    try {
+        const res = await fetch(`${BASE_URL}/login-user`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password })
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+            localStorage.setItem("user", JSON.stringify(data.user));
+            window.location.href = "dashboard.html";
+        } else {
+            alert(data.message || "Login failed");
+        }
+
+    } catch (err) {
+        console.error(err);
+        alert("Server error");
+    }
+});
+
+/* =========================
+   🆕 SIGNUP
+========================= */
+signupForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const name = document.getElementById("signup-name").value;
+    const email = document.getElementById("signup-email").value;
+    const password = document.getElementById("signup-password").value;
+
+    try {
+        const res = await fetch(`${BASE_URL}/signup`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name, email, password })
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+            alert("Signup successful! Please login.");
+            signupForm.reset();
+            signupForm.classList.remove("active");
+            loginForm.classList.add("active");
+        } else {
+            alert(data.message || "Signup failed");
+        }
+
+    } catch (err) {
+        console.error(err);
+        alert("Server error");
+    }
+});
+
+/* =========================
+   🔁 AUTO REDIRECT
+========================= */
+const user = localStorage.getItem("user");
+if (user) {
+    window.location.href = "dashboard.html";
+}
+</script>
+
+</body>
+</html>

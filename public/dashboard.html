@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - EasySnippet</title>
+
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+</head>
+
+<body class="dashboard-body">
+
+<div class="dashboard-wrapper">
+    
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <span class="logo-icon">&lt;/&gt;</span> <span>EASYSNIPPET</span>
+        </div>
+
+        <ul class="sidebar-menu">
+            <li class="menu-item active"><a href="#"><span class="material-symbols-rounded">folder</span> All Snippets</a></li>
+            <li class="menu-item"><a href="#"><span class="material-symbols-rounded">star</span> Favorites</a></li>
+            <li class="menu-item"><a href="#"><span class="material-symbols-rounded">label</span> Tags</a></li>
+            <li class="menu-item"><a href="#"><span class="material-symbols-rounded">delete</span> Trash</a></li>
+        </ul>
+
+        <div class="sidebar-footer">
+            <div class="user-profile">
+                <div class="avatar" id="userAvatar">U</div>
+                <div class="user-info">
+                    <span class="user-name" id="userName">User</span>
+                    <a href="#" id="logoutBtn" class="logout-link">Log out</a>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main-content">
+        
+        <header class="top-bar">
+            <div class="search-container">
+                <input type="text" placeholder="Search snippets..." class="search-input">
+            </div>
+            <button class="btn-primary btn-sm" id="openModalBtn">+ New Snippet</button>
+        </header>
+
+        <div class="content-padding">
+            <h2 class="page-title">All Snippets</h2>
+            
+            <!-- 🔁 Dynamic Snippets -->
+            <div class="snippets-grid" id="snippetsContainer"></div>
+        </div>
+    </main>
+</div>
+
+<!-- MODAL -->
+<div id="snippetModal" class="modal-overlay hidden">
+    <div class="modal-container">
+        <div class="modal-header">
+            <h3>Create New Snippet</h3>
+            <button id="closeModal" class="close-icon">&times;</button>
+        </div>
+        
+        <form id="addSnippetForm">
+            <div class="form-group">
+                <label>Title</label>
+                <input type="text" id="snippetTitle" required>
+            </div>
+
+            <div class="row">
+                <div class="form-group half">
+                    <label>Language</label>
+                    <select id="snippetLang" required>
+                        <option value="javascript">JavaScript</option>
+                        <option value="html">HTML</option>
+                        <option value="css">CSS</option>
+                        <option value="python">Python</option>
+                    </select>
+                </div>
+
+                <div class="form-group half">
+                    <label>Tags</label>
+                    <input type="text" id="snippetTags">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Code</label>
+                <textarea id="snippetCode" rows="10" required></textarea>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" id="cancelBtn">Cancel</button>
+                <button type="submit">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+/* =========================
+   🔥 CONFIG (IMPORTANT)
+========================= */
+const BASE_URL = "https://your-backend.onrender.com"; // 🔁 CHANGE THIS
+
+/* =========================
+   👤 LOAD USER
+========================= */
+const user = JSON.parse(localStorage.getItem("user"));
+
+if (!user) {
+    window.location.href = "login.html";
+} else {
+    document.getElementById("userName").innerText = user.full_name;
+    document.getElementById("userAvatar").innerText = user.full_name[0];
+}
+
+/* =========================
+   🚪 LOGOUT
+========================= */
+document.getElementById("logoutBtn").addEventListener("click", () => {
+    localStorage.removeItem("user");
+    window.location.href = "login.html";
+});
+
+/* =========================
+   📦 LOAD SNIPPETS
+========================= */
+async function loadSnippets() {
+    try {
+        const res = await fetch(`${BASE_URL}/get-snippets/${user.id}`);
+        const data = await res.json();
+
+        const container = document.getElementById("snippetsContainer");
+        container.innerHTML = "";
+
+        data.snippets.forEach(snippet => {
+            container.innerHTML += `
+                <div class="snippet-card">
+                    <h3>${snippet.title}</h3>
+                    <pre><code>${snippet.code}</code></pre>
+                </div>
+            `;
+        });
+
+        hljs.highlightAll();
+
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+loadSnippets();
+
+/* =========================
+   ➕ ADD SNIPPET
+========================= */
+document.getElementById("addSnippetForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const title = snippetTitle.value;
+    const language = snippetLang.value;
+    const tags = snippetTags.value;
+    const code = snippetCode.value;
+
+    await fetch(`${BASE_URL}/add-snippet`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            userId: user.id,
+            title,
+            language,
+            tags,
+            code
+        })
+    });
+
+    loadSnippets();
+});
+</script>
+
+</body>
+</html>

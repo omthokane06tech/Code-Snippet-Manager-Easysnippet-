@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EasySnippet - Your Personal Code Vault</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+    <div class="container nav-container">
+        <div class="logo">
+            <span class="logo-icon">&lt;/&gt;</span> EASYSNIPPET
+        </div>
+        
+        <ul class="nav-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#how-it-works">How it Works</a></li>
+            <li><a href="#snippets">Snippets</a></li>
+            <li><a href="#about">About Us</a></li>
+        </ul>
+
+        <div class="nav-buttons">
+            <a href="login.html" class="btn-text">Log In</a>
+            <a href="login.html" class="btn-primary">Get Started</a>
+        </div>
+    </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero-section" id="home">
+    <div class="container hero-container">
+        
+        <div class="hero-badge">Your personal Code vault</div>
+        
+        <h1>Stop Rewriting <span class="highlight-blue">Start Reusing</span></h1>
+        
+        <p class="hero-subtext">
+            Your personal library of code, always one click away. 
+            Save snippets, organize with tags, and sync across devices.
+        </p>
+        
+        <!-- ✅ FIXED BUTTON -->
+        <a href="login.html" class="btn-large">Sign up for free</a>
+
+        <div class="hero-image-wrapper">
+            <div class="code-window">
+                <div class="window-header">
+                    <div class="dot red"></div>
+                    <div class="dot yellow"></div>
+                    <div class="dot green"></div>
+                    <span class="filename">snippet.js</span>
+                </div>
+                <div class="window-body">
+                    <pre><code>const saveSnippet = (code) => {
+  if (!code) return;
+
+  database.push({
+    id: 101,
+    language: 'javascript',
+    content: code
+  });
+
+  console.log("Snippet Saved!");
+};</code></pre>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</header>
+
+<!-- (ALL YOUR OTHER SECTIONS SAME — NO CHANGE NEEDED) -->
+
+<footer>
+    <div class="container footer-content">
+        <div class="footer-logo">EasySnippet</div>
+        <div class="copyright">© 2025 EasySnippet. All rights reserved.</div>
+        <div class="footer-links">
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+        </div>
+    </div>
+</footer>
+
+<script>
+/* =========================
+   🔐 AUTO REDIRECT (OPTIONAL)
+========================= */
+const user = localStorage.getItem("user");
+
+if (user) {
+    // If already logged in → go to dashboard
+    window.location.href = "dashboard.html";
+}
+</script>
+
+</body>
+</html>
