@@ -24,10 +24,9 @@ app.use(express.urlencoded({ extended: true }));
 
 // this connection code is according to the render deployment
 const db = mysql.createPool({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
+  mysql.createConnection(process.env.mysql:root:oPiLGCKqLygxlqdmdYUfpxNaOXQUNnub@switchback.proxy.rlwy.net:55032/railway);
+  
+
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0
